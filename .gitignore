@@ -1,0 +1,40 @@
+# Python / Virtual Environments
+3dai_env/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Data & Model Weights (3D AI & ML)
+data/          
+*.csv          
+*.pt
+*.pth
+*.onnx
+*.bin
+*.safetensors
+*.ckpt
+# Dataframes, Datasets & Output Files
+*.npy
+*.npz
+*.parquet
+*.feather
+*.h5
+*.hdf5
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.pdf
+.matplotlib/
+
+# IDE & System Files
+.env
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Notebooks & Checkpoints
+Ml_model.ipynb
+.ipynb_checkpoints/
