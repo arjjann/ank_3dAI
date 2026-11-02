@@ -6,6 +6,7 @@ from sklearn.metrics import mean_absolute_error
 def main():
 
     file_path="data/train.csv"
+
     home_data=pd.read_csv(file_path)
 
     y=home_data.SalePrice

@@ -7,8 +7,7 @@ from sklearn.model_selection import cross_val_score
 
 # STEP 1: DEFINE EVALUATION FUNCTION (Cross-Validation Pipeline)
 def get_score(n_estimators, X, y):
-    """
-    Builds a pipeline (Imputer + RandomForest) and computes 
+    """ Builds a pipeline (Imputer + RandomForest) and computes 
     the average Mean Absolute Error (MAE) across 3 cross-validation folds.
     """
     my_pipeline = Pipeline(steps=[
