@@ -23,4 +23,3 @@ Place `train.csv` inside a `data/` directory:
 3. **`model_optimiation.py`**: Hyperparameter tuning (`max_leaf_nodes`) to address overfitting and underfitting.
 4. **`rf_model.py`**: Baseline ensemble modeling using Random Forest Regressor.
 5. **`missing_values.py`**: Comparison of 3 strategies for missing numeric data (Dropping columns, Simple Imputation, and Imputation with indicators).
-6. **`cross_verification.py`**: 3-Fold Cross-Validation pipeline evaluating `n_estimators` in Random Forests with matplotlib visualization.
