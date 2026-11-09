@@ -2,8 +2,8 @@ from pathlib import Path
 import cadquery as cq
 
 ROOT = Path(__file__).resolve().parent
-MODEL_DIR = ROOT / "/data/CADs"
-MODEL_DIR.mkdir(exist_ok=True)
+MODEL_DIR = Path.home() / "ank_3dAI" / "data" / "CADs" 
+MODEL_DIR.mkdir(parents=True, exist_ok=True)
 
 def make_models():
     models = {}

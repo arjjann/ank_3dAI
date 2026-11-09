@@ -6,7 +6,8 @@ __pycache__/
 *$py.class
 
 # Data & Model Weights (3D AI & ML)
-data/          
+data/
+!data/.gitkeep       
 *.csv          
 *.pt
 *.pth

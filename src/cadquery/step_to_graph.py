@@ -1,30 +1,24 @@
-"""
-Convert STEP solids into face-adjacency graphs.
-
-Each graph node is a B-Rep face.
-Each graph edge represents a shared B-Rep edge between two faces.
-Node and edge features are numeric arrays suitable for graph-learning pipelines.
-
-Run:
-    python step_to_graph.py
-    python step_to_graph.py --input models --output graphs
-
-Outputs per STEP file:
-    <name>.npz  : face_features, edge_index, edge_features
-    <name>.json : feature names, entity counts, labels/metadata
-
-This is a deliberately transparent baseline, not the exact BRepNet representation.
-"""
 from pathlib import Path
-import argparse
+import argparse #parse command-line flags like --input and --output passed when running the script
 import json
 import math
 import numpy as np
 import cadquery as cq
 
-SURFACE_TYPES = ["PLANE", "CYLINDER", "CONE", "SPHERE", "TORUS", "BSPLINE", "OTHER"]
-CURVE_TYPES = ["LINE", "CIRCLE", "ELLIPSE", "BSPLINE", "OTHER"]
+SURFACE_TYPES = ["PLANE", 
+                 "CYLINDER", 
+                 "CONE", 
+                 "SPHERE", 
+                 "TORUS", 
+                 "BSPLINE", 
+                 "OTHER"]
+CURVE_TYPES = ["LINE", 
+               "CIRCLE",
+                 "ELLIPSE", 
+                 "BSPLINE", 
+                 "OTHER"]
 
+# finds or return the surface type in vector format e.g[1,0,0,0,0,0,0] for plane
 def one_hot(value, choices):
     result = [0.0] * len(choices)
     try:
@@ -33,6 +27,7 @@ def one_hot(value, choices):
         result[-1] = 1.0
     return result
 
+#Convert incoming values into floating value 
 def safe_float(value, default=0.0):
     try:
         value = float(value)
@@ -40,7 +35,8 @@ def safe_float(value, default=0.0):
     except Exception:
         return default
 
-def vec3(v):
+############################################
+def vec3(v): #it takes CAdQuery 3D vector object and return floating point numbers [x,y,z]
     return [safe_float(v.x), safe_float(v.y), safe_float(v.z)]
 
 def face_features(face):
@@ -87,7 +83,7 @@ def edge_features(edge):
     # 5 curve-type indicators + length + radius + center(3) + tangent(3)
     return one_hot(curve, CURVE_TYPES) + [length, radius] + center + tangent
 
-def same_shape(a, b):
+def same_shape(a, b): #checks iff faces share same edge
     # IsSame compares the underlying OpenCASCADE topological shape.
     try:
         return bool(a.wrapped.IsSame(b.wrapped))
@@ -100,29 +96,28 @@ def convert_step(step_path, output_dir):
     if not solids:
         raise RuntimeError(f"No solid found in {step_path}")
 
-    # For this starter project, process the first solid in each STEP file.
+    # Load and exact topology or loading CAD
     solid = solids[0]
     faces = solid.Faces()
     edges = solid.Edges()
 
-    node_array = np.asarray([face_features(f) for f in faces], dtype=np.float32)
-    edge_array = np.asarray([edge_features(e) for e in edges], dtype=np.float32)
+    node_array = np.asarray([face_features(f) for f in faces], dtype=np.float32) #exact node features
+      
+    edge_array = np.asarray([edge_features(e) for e in edges], dtype=np.float32) #exact edge features
 
-    # Map each unique B-Rep edge to its global edge index.
-    # A shared edge appearing in two face boundaries creates one undirected
-    # face-adjacency connection, with its B-Rep edge feature as the attribute.
+    # extract edge features and adjency,find which faces are connected
     face_pairs = []
     graph_edge_attrs = []
     for edge_idx, edge in enumerate(edges):
         incident_faces = []
+        #faces that share same edges
         for face_idx, face in enumerate(faces):
             if any(same_shape(edge, face_edge) for face_edge in face.Edges()):
                 incident_faces.append(face_idx)
 
-        # A regular manifold boundary edge has two incident faces.
-        # Ignore edges with fewer than two incident faces in this face graph.
+        #create connection between faces
         if len(incident_faces) >= 2:
-            # If a non-manifold edge has >2 incident faces, connect every pair.
+
             for i in range(len(incident_faces)):
                 for j in range(i + 1, len(incident_faces)):
                     a, b = incident_faces[i], incident_faces[j]
