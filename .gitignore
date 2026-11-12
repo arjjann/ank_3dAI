@@ -6,8 +6,12 @@ __pycache__/
 *$py.class
 
 # Data & Model Weights (3D AI & ML)
-data/
-!data/.gitkeep       
+data/CADs/*
+!data/CADs/.gitkeep
+data/graphs/*
+!data/graphs/.gitkeep
+data/processed_graphs/*
+!data/processed_graphs/.gitkeep    
 *.csv          
 *.pt
 *.pth
@@ -16,6 +20,8 @@ data/
 *.safetensors
 *.ckpt
 # Dataframes, Datasets & Output Files
+outputs/
+output/
 *.npy
 *.npz
 *.parquet

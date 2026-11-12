@@ -189,15 +189,15 @@ def convert_step(step_path, output_dir):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", default="models", help="Folder containing STEP files")
-    parser.add_argument("--output", default="graphs", help="Output folder")
+    parser.add_argument("--input", default="../../data/CADs/c_models", help="Folder containing STEP files")
+    parser.add_argument("--output", default="../../data/graphs", help="Output folder")
     args = parser.parse_args()
 
     input_dir = Path(args.input)
     output_dir = Path(args.output)
     step_files = sorted(list(input_dir.glob("*.step")) + list(input_dir.glob("*.stp")))
     if not step_files:
-        raise SystemExit(f"No .step/.stp files found in {input_dir}. Run generate_models.py first.")
+        raise SystemExit(f"No .step/.stp files found in {input_dir}.")
 
     for step_path in step_files:
         try:
